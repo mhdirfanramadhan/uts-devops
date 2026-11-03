@@ -1,20 +1,14 @@
-# Use official Node.js 14 as base image
-FROM node:16.20.2-buster-slim
-
-# Set working directory
+# Tahap 1: pasang dependency
+FROM node:22-alpine AS deps
 WORKDIR /usr/src/app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
+# tanpa --omit=dev: chalk dan cross-env ada di devDependencies tapi dipakai saat runtime
+RUN npm ci
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the server code
+# Tahap 2: runtime
+FROM node:22-alpine
+WORKDIR /usr/src/app
+COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
-
-# Expose port 3000 for the server
 EXPOSE 3000
-
-# Default command to start the application
 CMD ["npm", "start"]
