@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+ARG API_URL=http://localhost:3000/api
+RUN echo "API_URL=$API_URL" > .env
 RUN npm run build
 
 # Tahap 2: Runtime Web Server

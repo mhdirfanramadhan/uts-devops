@@ -14,9 +14,12 @@ services:
     restart: unless-stopped
     environment:
       PORT: 3000
+      BASE_API_URL: api
       MONGO_URI: mongodb://mongo:27017/mern_ecommerce
       JWT_SECRET: ${JWT_SECRET}
       CLIENT_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
     command: ["sh", "-c", "npm run seed:db ${ADMIN_EMAIL} ${ADMIN_PASSWORD} && npm start"]
     depends_on:
       - mongo
@@ -38,7 +41,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 5 --cleanup --label-enable
+    command: --interval 60 --cleanup --label-enable
     networks:
       - app-network
 
