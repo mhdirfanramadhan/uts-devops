@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  dockerfile:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [client, server, database]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.image }}/Dockerfile
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Periksa compose development
+        run: docker compose -f docker-compose.yml config -q
+
+      - name: Periksa compose produksi
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          JWT_SECRET: lint
+          ADMIN_EMAIL: lint@example.com
+          ADMIN_PASSWORD: lint
+        run: docker compose -f docker-compose.prod.yml config -q
