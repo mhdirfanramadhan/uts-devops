@@ -9,6 +9,7 @@ RUN echo "API_URL=$API_URL" > .env && npm run build
 
 # Tahap 2: Runtime Web Server
 FROM nginx:alpine
+MAINTAINER "Bagas Arka Dinanta"
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 8080
