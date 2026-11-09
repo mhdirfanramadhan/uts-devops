@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
-    healthchek:
+    healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 5s
